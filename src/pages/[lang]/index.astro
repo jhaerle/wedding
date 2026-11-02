@@ -3,13 +3,15 @@ import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
+import { underConstruction } from '../../config';
 import { locales, getDictionary, pageUrl, navSlugs, type Locale } from '../../i18n';
 import venueGarden from '../../assets/photos/venue-garden.png';
 import venueDining from '../../assets/photos/venue-dining.png';
 import dresscode from '../../assets/photos/dresscode.png';
 
 export function getStaticPaths() {
-  return locales.map((lang) => ({ params: { lang } }));
+  // No real pages are generated while the site is under construction.
+  return underConstruction ? [] : locales.map((lang) => ({ params: { lang } }));
 }
 const lang = Astro.params.lang as Locale;
 const t = getDictionary(lang);

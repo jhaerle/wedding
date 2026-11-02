@@ -1,0 +1,36 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: withastro/action@v3
+        env:
+          # Repo variable UNDER_CONSTRUCTION: set to 'false' to publish the real site.
+          # Unset (or anything else) publishes the under-construction page.
+          PUBLIC_UNDER_CONSTRUCTION: ${{ vars.UNDER_CONSTRUCTION }}
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
