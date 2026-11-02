@@ -3,6 +3,6 @@
  * Controlled by PUBLIC_UNDER_CONSTRUCTION:
  *   - 'false'            -> real site
  *   - anything else/unset -> under construction (safe default for production builds)
- * Local `npm run dev` sets it to 'false' via .env.development.
+ * `astro dev` always shows the real site (see astro.config.mjs).
  */
 export const underConstruction = import.meta.env.PUBLIC_UNDER_CONSTRUCTION !== 'false';

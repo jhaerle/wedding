@@ -1,6 +1,5 @@
 ---
-import { underConstruction } from '../config';
-import UnderConstruction from '../components/UnderConstruction.astro';
-import LanguagePicker from '../components/LanguagePicker.astro';
+// Resolved in astro.config.mjs: LanguagePicker (live) or UnderConstruction (default build).
+import RootPage from '@root-page';
 ---
-{underConstruction ? <UnderConstruction /> : <LanguagePicker />}
+<RootPage />
