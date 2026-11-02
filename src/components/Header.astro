@@ -1,0 +1,65 @@
+---
+import { getDictionary, pageUrl, navSlugs, type Locale } from '../i18n';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+interface Props { lang: Locale; current?: keyof typeof navSlugs; }
+const { lang, current = 'home' } = Astro.props;
+const t = getDictionary(lang);
+const items = (Object.keys(navSlugs) as (keyof typeof navSlugs)[]).map((key) => ({
+  key, label: t.nav[key], href: pageUrl(lang, navSlugs[key]),
+}));
+---
+<header class="site-header">
+  <a class="logo" href={pageUrl(lang)} aria-label={t.logoAlt}>
+    <img src="/assets/brand/logo-blue.svg" alt="" width="72" height="118" />
+  </a>
+
+  <div class="menu">
+    <input type="checkbox" id="menu-toggle" class="sr-only" />
+    <label for="menu-toggle" class="toggle"><span class="sr-only">{t.nav.menu}</span><span class="burger" aria-hidden="true"></span></label>
+    <nav aria-label={t.nav.label}>
+      <ul>
+        {items.map((i) => (
+          <li><a href={i.href} aria-current={i.key === current ? 'page' : undefined}>{i.label}</a></li>
+        ))}
+      </ul>
+      <a class="pill" href="#contact">{t.nav.contact}</a>
+    </nav>
+  </div>
+
+  <LanguageSwitcher lang={lang} slug={navSlugs[current]} />
+</header>
+
+<style>
+  .site-header {
+    position: absolute; inset: 0 0 auto 0; z-index: 10;
+    display: flex; align-items: flex-start; gap: clamp(1rem, 2.5vw, 3.5rem);
+    padding: clamp(1.25rem, 3.5vw, 3.5rem) clamp(1.25rem, 4.1vw, 3.875rem) 0;
+    align-items: flex-start;
+    color: var(--anthracite);
+  }
+  .logo img { width: clamp(2.75rem, 4.8vw, 4.5rem); height: auto; }
+  .menu { flex: 1; }
+  .toggle { cursor: pointer; margin-left: auto; width: 2.75rem; height: 2.75rem; display: grid; place-items: center; }
+  #menu-toggle:focus-visible + .toggle { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .burger, .burger::before, .burger::after { display: block; width: 1.5rem; height: 2px; background: var(--ocean-blue); content: ""; position: relative; }
+  .burger::before { position: absolute; top: -7px; } .burger::after { position: absolute; top: 7px; }
+
+  nav { display: none; }
+  #menu-toggle:checked ~ nav {
+    display: flex; flex-direction: column; align-items: flex-start; gap: 1.25rem;
+    position: absolute; top: 100%; left: 1rem; right: 1rem; padding: 1.5rem;
+    background: var(--white); border-radius: 1rem; box-shadow: 0 8px 30px rgb(0 0 0 / .12);
+  }
+  ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .75rem; }
+  nav a { text-decoration: none; font-size: var(--text-body); line-height: 1.1; }
+  nav ul a[aria-current="page"] { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 6px; text-decoration-color: var(--ocean-blue); }
+  nav ul a:hover { text-decoration: underline; text-underline-offset: 6px; }
+  .pill { background: var(--ocean-blue); color: var(--accent-fg); border-radius: var(--radius-pill); padding: .15rem 1.5rem; }
+
+  @media (min-width: 900px) {
+    .toggle { display: none; }
+    nav, #menu-toggle:checked ~ nav { display: flex; position: static; flex-direction: row; align-items: center; justify-content: space-between; padding: 0; background: none; box-shadow: none; border-radius: 0; gap: 2rem; }
+    ul { flex-direction: row; gap: clamp(1.5rem, 4.4vw, 4rem); }
+    .pill { padding-block: .1rem; margin-left: auto; }
+  }
+</style>

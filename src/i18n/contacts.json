@@ -1,0 +1,13 @@
+{
+  "people": [
+    {
+      "name": "Julien Härle",
+      "phone": "+41 79 129 22 72",
+      "email": "jhaerle@bluewin.ch"
+    },
+    {
+      "name": "Daniela Galvan",
+      "phone": "+41 76 243 17 72"
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+---
+import { getDictionary, pageUrl, navSlugs, type Locale } from '../i18n';
+import contacts from '../i18n/contacts.json';
+interface Props { lang: Locale; }
+const { lang } = Astro.props;
+const t = getDictionary(lang);
+const links = (['home', 'flights', 'transport', 'accommodation', 'programme'] as const).map((k) => ({ label: t.nav[k], href: pageUrl(lang, navSlugs[k]) }));
+const [julien, daniela] = contacts.people;
+---
+<section id="contact" class="contact" data-theme="beige">
+  <div class="container">
+    <h2 class="contact-title">{t.contact.title}</h2>
+    <p class="contact-sub">{t.contact.subtitle}</p>
+    <div class="people">
+      <p><span class="bold">{julien.name}</span><br />{julien.phone}<br /><a href={`mailto:${julien.email}`}>{julien.email}</a></p>
+      <p><span class="bold">{daniela.name}</span><br />{daniela.phone}</p>
+    </div>
+  </div>
+  <img class="flower" src="/assets/brand/flower-a.svg" alt="" aria-hidden="true" width="477" height="569" />
+</section>
+
+<footer class="footer" data-theme="ocean">
+  <div class="container grid">
+    <nav aria-label={t.nav.label}>
+      <ul>{links.map((l) => <li><a class="bold" href={l.href}>{l.label}</a></li>)}</ul>
+    </nav>
+    <a class="mark" href={pageUrl(lang)} aria-label={t.logoAlt}><img src="/assets/brand/logo-light.svg" alt="" width="95" height="138" /></a>
+    <div class="people">
+      <p class="bold heading">{t.contact.heading}</p>
+      <p><span class="bold">{julien.name}</span><br />{julien.phone}</p>
+      <p><span class="bold">{daniela.name}</span><br />{daniela.phone}</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .contact { position: relative; background: var(--bg); color: var(--ocean-blue); padding-block: clamp(3rem, 6vw, 6.5rem); min-height: clamp(0px, 33.8vw, 32rem); }
+  .contact-title { font-size: clamp(1.75rem, 1.2rem + 1.8vw, 3rem); font-weight: var(--weight-semibold); line-height: 1.1; }
+  .contact-sub { font-size: clamp(1.4rem, 1rem + 1.4vw, 2.5rem); margin-top: .5rem; }
+  .people { display: flex; flex-direction: column; gap: 1.5rem; margin-top: clamp(1.5rem, 3vw, 3rem); position: relative; z-index: 1; }
+  .people a { text-decoration: none; }
+  .flower { position: absolute; right: -9%; bottom: -10%; width: clamp(14rem, 31.5vw, 29.8rem); height: auto; pointer-events: none; z-index: 2; }
+
+  .footer { background: var(--bg); color: var(--fg); padding-block: clamp(2.5rem, 5.5vw, 5.5rem); min-height: clamp(0px, 33.8vw, 32rem); position: relative; }
+  .grid { display: grid; grid-template-columns: 1fr auto 1fr; gap: 2rem; align-items: start; }
+  .footer ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .35rem; }
+  .footer a { text-decoration: none; }
+  .footer a:hover { text-decoration: underline; }
+  .footer .people { margin: 0; gap: 1.5rem; }
+  .footer .heading { margin-bottom: -.5rem; }
+  .footer .people { justify-self: end; }
+  .mark img { width: clamp(3.5rem, 6.3vw, 5.9rem); height: auto; }
+  @media (max-width: 700px) {
+    .grid { grid-template-columns: 1fr; justify-items: start; }
+    .footer .people { justify-self: start; }
+  }
+</style>

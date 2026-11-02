@@ -1,0 +1,142 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { locales, getDictionary, pageUrl, navSlugs, type Locale } from '../../i18n';
+import venueGarden from '../../assets/photos/venue-garden.png';
+import venueDining from '../../assets/photos/venue-dining.png';
+import dresscode from '../../assets/photos/dresscode.png';
+
+export function getStaticPaths() {
+  return locales.map((lang) => ({ params: { lang } }));
+}
+const lang = Astro.params.lang as Locale;
+const t = getDictionary(lang);
+const cards = (['flights', 'accommodation', 'transport', 'programme'] as const).map((k) => ({
+  label: t.cards[k], href: pageUrl(lang, navSlugs[k]),
+}));
+const palette = ['ocean-blue', 'light-blue', 'pale-green', 'forest-green', 'beige'];
+---
+<Base title={t.title} lang={lang}>
+  <a class="skip" href="#main">{t.skip}</a>
+
+  <div class="hero">
+    <Header lang={lang} current="home" />
+    <h1>
+      <img src="/assets/brand/names-lettering.svg" alt={t.namesAlt} width="468" height="321" />
+    </h1>
+  </div>
+
+  <main id="main">
+    <section class="intro">
+      <img class="flower flower-intro" src="/assets/brand/flower-c.svg" alt="" aria-hidden="true" width="387" height="462" />
+      <p class="date">{t.date}</p>
+      <h2 class="lead">{t.lead}</h2>
+      <p class="intro-text">{t.intro}</p>
+    </section>
+
+    <nav class="cards container" aria-label={t.nav.label}>
+      {cards.map((c) => (
+        <a class="card" href={c.href}>
+          <span class="thumb" aria-hidden="true"></span>
+          <span class="card-label">{c.label}</span>
+        </a>
+      ))}
+    </nav>
+
+    <section class="split venue">
+      <div class="container split-inner">
+        <div class="copy">
+          <h2 class="section-title">{t.venue}</h2>
+          <p class="body-text">{t.venueText}</p>
+        </div>
+        <ul class="carousel" aria-label={t.venuePhotos}>
+          <li><Image src={venueGarden} alt="" widths={[600, 1200]} sizes="(min-width: 900px) 40vw, 90vw" /></li>
+          <li><Image src={venueDining} alt="" widths={[600, 1200]} sizes="(min-width: 900px) 40vw, 90vw" /></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="split dress">
+      <img class="flower flower-dress" src="/assets/brand/flower-b.svg" alt="" aria-hidden="true" width="387" height="462" />
+      <div class="container split-inner reverse">
+        <div class="copy">
+          <h2 class="section-title">{t.dresscode}</h2>
+          <p class="body-text">{t.dresscodeText}</p>
+          <ul class="palette" aria-label={t.paletteLabel}>
+            {palette.map((c) => <li style={`background: var(--${c})`}></li>)}
+          </ul>
+        </div>
+        <Image class="photo" src={dresscode} alt="" widths={[600, 1200]} sizes="(min-width: 900px) 40vw, 90vw" />
+      </div>
+    </section>
+
+    <section class="split rsvp">
+      <div class="container split-inner">
+        <div class="copy">
+          <h2 class="section-title">{t.rsvp}</h2>
+          <p class="body-text">{t.rsvpText}</p>
+        </div>
+        <div class="embed" role="img" aria-label="RSVP"></div>
+      </div>
+    </section>
+  </main>
+
+  <Footer lang={lang} />
+</Base>
+
+<style>
+  .skip { position: absolute; left: -999px; top: 0; background: var(--white); padding: .5rem 1rem; z-index: 20; }
+  .skip:focus { left: 0; }
+
+  /* Hero */
+  .hero { position: relative; background: var(--placeholder); min-height: clamp(26rem, 54.4vw, 51.4rem); display: grid; place-items: center; padding-top: 6rem; }
+  .hero h1 { margin: 0; }
+  .hero h1 img { width: clamp(15rem, 31vw, 29.25rem); height: auto; }
+
+  /* Intro */
+  .intro { position: relative; text-align: center; padding: clamp(4rem, 8.5vw, 8rem) var(--page-gutter) 0; }
+  .date { font-style: italic; font-size: var(--text-date); line-height: 1; }
+  .lead { font-size: var(--text-lead); font-weight: var(--weight-medium); line-height: 1; margin-top: clamp(1.5rem, 3.5vw, 3.5rem); }
+  .intro-text { font-family: var(--font-intro); font-weight: 300; font-size: var(--text-intro); line-height: 1; max-width: 969px; margin: clamp(1rem, 2vw, 2rem) auto 0; }
+
+  /* Decorative flowers */
+  .flower { position: absolute; pointer-events: none; width: clamp(9rem, 25.6vw, 24.2rem); height: auto; }
+  .flower-intro { left: 98.5%; top: 34vw; transform: translate(-50%, -50%) scaleX(-1) rotate(-68.8deg); }
+  @media (max-width: 899px) { .flower { opacity: .3; z-index: -1; } }
+  .flower-dress { left: 2.2%; top: 42%; transform: translate(-50%, -50%) rotate(68.8deg); }
+
+  /* Cards */
+  .cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem 1.25rem; margin-top: clamp(3rem, 10.5vw, 10rem); }
+  .card { text-decoration: none; text-align: center; display: grid; gap: 1rem; justify-items: center; }
+  .thumb { width: 100%; max-width: 255px; aspect-ratio: 1; background: var(--placeholder); transition: transform .2s; }
+  .card:hover .thumb, .card:focus-visible .thumb { transform: translateY(-4px); }
+  .card-label { font-size: var(--text-lead); line-height: 1.1; }
+  @media (min-width: 800px) { .cards { grid-template-columns: repeat(4, 1fr); padding-inline: clamp(1.5rem, 11.8vw, 11rem); } }
+
+  /* Split sections */
+  .split { position: relative; padding-top: var(--space-section); }
+  .split-inner { display: grid; gap: 2rem; align-items: center; }
+  .copy { display: grid; gap: clamp(1rem, 2vw, 2rem); align-content: start; position: relative; }
+  .copy .body-text { max-width: 535px; }
+  @media (min-width: 900px) {
+    .split-inner { grid-template-columns: 1fr 1fr; gap: clamp(2rem, 5vw, 5rem); }
+    .split-inner.reverse .copy { order: 2; }
+    .split-inner.reverse .photo { order: 1; }
+  }
+  .carousel { list-style: none; margin: 0; padding: 0; display: flex; gap: 1.5rem; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+  .carousel::-webkit-scrollbar { display: none; }
+  .carousel li { flex: 0 0 min(588px, 90%); scroll-snap-align: start; aspect-ratio: 588 / 355; }
+  @media (min-width: 900px) { .carousel { margin-right: calc(var(--page-gutter) * -1); } .carousel li { flex-basis: 92%; } }
+  .carousel :global(img), .photo { width: 100%; height: 100%; object-fit: cover; }
+  .photo { aspect-ratio: 588 / 355; object-position: 50% 1%; }
+
+  .palette { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; position: absolute; right: -2.5rem; top: 0; }
+  .palette li { width: clamp(2.75rem, 5.4vw, 5.1rem); aspect-ratio: 1; border-radius: 50%; margin-top: calc(clamp(2.75rem, 5.4vw, 5.1rem) * -.5); }
+  .palette li:first-child { margin-top: 0; }
+  @media (max-width: 899px) { .palette { position: static; flex-direction: row; } .palette li { margin: 0 0 0 -1rem; } .palette li:first-child { margin-left: 0; } }
+
+  .rsvp { padding-bottom: var(--space-section); }
+  .embed { background: var(--placeholder); aspect-ratio: 588 / 355; width: 100%; }
+</style>

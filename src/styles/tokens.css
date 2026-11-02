@@ -1,0 +1,56 @@
+/* ==========================================================================
+   Design tokens — source: Figma "D&J Wedding" (variables + text styles)
+   ========================================================================== */
+:root {
+  /* Palette (Figma variables) */
+  --ocean-blue: #014b71;
+  --light-blue: #d4ebf2;
+  --grey-blue: #a6b7c2;
+  --pale-green: #bfccb9;
+  --forest-green: #617865;
+  --beige: #eee8df;
+  --anthracite: #222222;
+  --white: #ffffff;
+  --placeholder: #d9d9d9; /* grey boxes in the mockup = photo / embed still to come */
+
+  /* Font families */
+  --font-display: "IM Fell Great Primer", "IM Fell English", Georgia, serif; /* "Titre Section" */
+  --font-body: "EB Garamond", Georgia, serif; /* "TexteCorps" / "Texte corps Bold" */
+  --font-intro: "Afacad Flux", system-ui, sans-serif; /* intro paragraph on the homepage */
+
+  /* Type scale. Design is 1512px wide; sizes are fluid below that. */
+  --text-body: clamp(1.125rem, 0.95rem + 0.5vw, 1.625rem); /* 26px */
+  --text-title: clamp(2.5rem, 1.8rem + 2.2vw, 4rem); /* 64px — Titre Section */
+  --text-lead: clamp(1.5rem, 1.2rem + 1vw, 2.5rem); /* 40px */
+  --text-date: clamp(2.5rem, 1.5rem + 3.5vw, 4.375rem); /* 70px */
+  --text-intro: clamp(1.25rem, 1rem + 1vw, 2.25rem); /* 36px */
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+
+  /* Layout */
+  --page-gutter: clamp(1.5rem, 6.6vw, 6.25rem); /* 100px at 1512 */
+  --content-max: 1512px;
+  --radius-pill: 50px;
+  --space-section: clamp(4rem, 12vw, 11rem);
+
+  /* Default theme: light */
+  --bg: var(--white);
+  --fg: var(--anthracite);
+  --accent: var(--ocean-blue);
+  --accent-fg: var(--beige);
+}
+
+/* Themes — apply with data-theme on any section */
+[data-theme="beige"] {
+  --bg: var(--beige);
+  --fg: var(--anthracite);
+  --accent: var(--ocean-blue);
+  --accent-fg: var(--beige);
+}
+[data-theme="ocean"] {
+  --bg: var(--ocean-blue);
+  --fg: var(--beige);
+  --accent: var(--light-blue);
+  --accent-fg: var(--ocean-blue);
+}
